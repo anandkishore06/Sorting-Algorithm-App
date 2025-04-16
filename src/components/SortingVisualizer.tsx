@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -126,9 +125,9 @@ const SortingVisualizer: React.FC = () => {
     
     if (!isRunning) {
       // Generate steps for the chosen algorithm
-      const newSteps = getSortingSteps(algorithm, [...array]);
-      setSteps(newSteps);
-      stepsRef.current = newSteps;
+      const sortingSteps = getSortingSteps(algorithm, [...array]);
+      setSteps(sortingSteps);
+      stepsRef.current = sortingSteps;
       setCurrentStepIndex(0);
       setIsRunning(true);
       setIsPaused(false);
@@ -174,11 +173,6 @@ const SortingVisualizer: React.FC = () => {
   useEffect(() => {
     initializeArray();
   }, [arraySize, initializeArray]);
-
-  // When algorithm changes, reset sorting
-  useEffect(() => {
-    resetSorting();
-  }, [algorithm, resetSorting]);
 
   // Get current algorithm info
   const algorithmInfo = getAlgorithmInfo(algorithm);
