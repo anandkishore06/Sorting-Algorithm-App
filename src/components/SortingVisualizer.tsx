@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -183,17 +184,17 @@ const SortingVisualizer: React.FC = () => {
   const algorithmInfo = getAlgorithmInfo(algorithm);
 
   return (
-    <div className="flex flex-col min-h-screen p-4 sm:p-6 md:p-8">
+    <div className="flex flex-col min-h-screen p-4 sm:p-6 md:p-8 bg-gradient-to-b from-background to-background/80">
       {/* Header with theme toggle */}
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
           Sorting Algorithm Visualizer
         </h1>
         <Button
           variant="outline"
           size="icon"
           onClick={toggleTheme}
-          className="rounded-full"
+          className="rounded-full shadow-sm hover:shadow-md transition-all"
         >
           {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
         </Button>
@@ -202,12 +203,12 @@ const SortingVisualizer: React.FC = () => {
       {/* Main content */}
       <main className="flex-1 grid gap-6">
         {/* Controls Section */}
-        <Card className="p-4">
+        <Card className="p-4 border border-primary/10 shadow-md bg-card/80 backdrop-blur-sm">
           <CardContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Algorithm Selector */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="algorithm" className="text-sm font-medium">
+                <label htmlFor="algorithm" className="text-sm font-medium text-foreground/80">
                   Algorithm
                 </label>
                 <Select
@@ -215,7 +216,7 @@ const SortingVisualizer: React.FC = () => {
                   onValueChange={handleAlgorithmChange}
                   disabled={isRunning && !isPaused}
                 >
-                  <SelectTrigger id="algorithm" className="rounded-full">
+                  <SelectTrigger id="algorithm" className="rounded-full shadow-sm hover:shadow border-primary/20">
                     <SelectValue placeholder="Select algorithm" />
                   </SelectTrigger>
                   <SelectContent>
@@ -231,7 +232,7 @@ const SortingVisualizer: React.FC = () => {
 
               {/* Array Size Control */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="array-size" className="text-sm font-medium">
+                <label htmlFor="array-size" className="text-sm font-medium text-foreground/80">
                   Array Size: {arraySize}
                 </label>
                 <Slider
@@ -249,7 +250,7 @@ const SortingVisualizer: React.FC = () => {
                   size="sm"
                   onClick={generateNewArray}
                   disabled={isRunning && !isPaused}
-                  className="mt-1 rounded-full"
+                  className="mt-1 rounded-full shadow-sm hover:shadow-md border-primary/20"
                 >
                   Generate New Array
                 </Button>
@@ -257,7 +258,7 @@ const SortingVisualizer: React.FC = () => {
 
               {/* Speed Control */}
               <div className="flex flex-col gap-2">
-                <label htmlFor="speed" className="text-sm font-medium">
+                <label htmlFor="speed" className="text-sm font-medium text-foreground/80">
                   Speed: {speed}%
                 </label>
                 <Slider
@@ -273,12 +274,12 @@ const SortingVisualizer: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium">Controls</span>
+                <span className="text-sm font-medium text-foreground/80">Controls</span>
                 <div className="grid grid-cols-3 gap-2">
                   <Button
                     onClick={startSorting}
                     variant="default"
-                    className="rounded-full"
+                    className="rounded-full shadow-sm hover:shadow-md transition-all"
                     disabled={isRunning && !isPaused}
                   >
                     <Play className="h-4 w-4 mr-2" />
@@ -287,7 +288,7 @@ const SortingVisualizer: React.FC = () => {
                   <Button
                     onClick={pauseSorting}
                     variant="secondary"
-                    className="rounded-full"
+                    className="rounded-full shadow-sm hover:shadow-md transition-all"
                     disabled={!isRunning || isPaused}
                   >
                     <Pause className="h-4 w-4 mr-2" />
@@ -296,7 +297,7 @@ const SortingVisualizer: React.FC = () => {
                   <Button
                     onClick={resetSorting}
                     variant="destructive"
-                    className="rounded-full"
+                    className="rounded-full shadow-sm hover:shadow-md transition-all"
                   >
                     <RotateCcw className="h-4 w-4 mr-2" />
                     Reset
@@ -307,7 +308,7 @@ const SortingVisualizer: React.FC = () => {
                   size="sm"
                   onClick={() => setShowInfo(!showInfo)}
                   disabled={isRunning && !isPaused}
-                  className="mt-1 rounded-full"
+                  className="mt-1 rounded-full shadow-sm hover:shadow-md border-primary/20"
                 >
                   <Info className="h-4 w-4 mr-2" />
                   {showInfo ? "Hide" : "Show"} Info
@@ -323,27 +324,27 @@ const SortingVisualizer: React.FC = () => {
         )}
 
         {/* Visualization Area */}
-        <Card className="flex-1 overflow-hidden">
+        <Card className="flex-1 overflow-hidden border border-primary/10 shadow-lg bg-card/80 backdrop-blur-sm">
           <CardContent className="h-full p-4">
             <div className="h-full flex flex-col">
               <div className="mb-2 flex justify-between items-center">
-                <h3 className="font-semibold">{algorithmInfo.name} Visualization</h3>
+                <h3 className="font-semibold text-lg text-foreground/90">{algorithmInfo.name} Visualization</h3>
                 <div className="text-sm text-muted-foreground">
                   {isRunning && !isPaused && (
-                    <span>Step: {currentStepIndex} / {steps.length - 1}</span>
+                    <span className="bg-primary/10 px-2 py-1 rounded-full text-primary">Step: {currentStepIndex} / {steps.length - 1}</span>
                   )}
                 </div>
               </div>
-              <div className="flex-1 relative min-h-[300px]">
+              <div className="flex-1 relative min-h-[300px] p-2 bg-background/40 rounded-lg">
                 <ArrayBars array={array} />
               </div>
               
               {/* Time and Space Complexity */}
               <div className="mt-4 flex justify-center gap-4">
-                <Badge variant="outline" className="text-sm">
+                <Badge variant="outline" className="text-sm py-1 px-3 shadow-sm border-primary/20 bg-background/50">
                   Time: {algorithmInfo.timeComplexity}
                 </Badge>
-                <Badge variant="outline" className="text-sm">
+                <Badge variant="outline" className="text-sm py-1 px-3 shadow-sm border-primary/20 bg-background/50">
                   Space: {algorithmInfo.spaceComplexity}
                 </Badge>
               </div>

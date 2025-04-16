@@ -19,20 +19,20 @@ const ArrayBars: React.FC<ArrayBarsProps> = ({ array }) => {
         const heightPercentage = (element.value / maxValue) * 100;
         
         // Determine bar color based on element state
-        let barColor = 'bg-primary';
+        let barColor = 'bg-gradient-to-t from-primary to-primary/80';
         
         if (element.isSorted) {
-          barColor = 'bg-green-500';
+          barColor = 'bg-gradient-to-t from-green-500 to-green-400';
         } else if (element.isSwapping) {
-          barColor = 'bg-red-500';
+          barColor = 'bg-gradient-to-t from-red-500 to-red-400';
         } else if (element.isComparing) {
-          barColor = 'bg-yellow-500';
+          barColor = 'bg-gradient-to-t from-yellow-500 to-yellow-400';
         }
         
         return (
           <div
             key={index}
-            className={`${barColor} rounded-t-sm transition-all`}
+            className={`${barColor} rounded-t-md transition-all shadow-md`}
             style={{
               height: `${heightPercentage}%`,
               width: `${100 / Math.max(array.length, 1)}%`,
