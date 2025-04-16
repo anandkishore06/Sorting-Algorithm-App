@@ -126,7 +126,7 @@ const SortingVisualizer: React.FC = () => {
     
     if (!isRunning) {
       // Generate steps for the chosen algorithm
-      const newSteps = getSortingSteps(algorithm, array);
+      const newSteps = getSortingSteps(algorithm, [...array]);
       setSteps(newSteps);
       stepsRef.current = newSteps;
       setCurrentStepIndex(0);
@@ -151,7 +151,7 @@ const SortingVisualizer: React.FC = () => {
 
   // Run sorting animation
   useEffect(() => {
-    if (isRunning && !isPaused) {
+    if (isRunning && !isPaused && steps.length > 0) {
       if (currentStepIndex < steps.length - 1) {
         animationTimeoutRef.current = setTimeout(() => {
           setCurrentStepIndex(prevIndex => prevIndex + 1);
@@ -205,114 +205,127 @@ const SortingVisualizer: React.FC = () => {
         {/* Controls Section */}
         <Card className="p-4 border border-primary/10 shadow-md bg-card/80 backdrop-blur-sm">
           <CardContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Algorithm Selector */}
-              <div className="flex flex-col gap-2">
-                <label htmlFor="algorithm" className="text-sm font-medium text-foreground/80">
-                  Algorithm
-                </label>
-                <Select
-                  value={algorithm}
-                  onValueChange={handleAlgorithmChange}
-                  disabled={isRunning && !isPaused}
-                >
-                  <SelectTrigger id="algorithm" className="rounded-full shadow-sm hover:shadow border-primary/20">
-                    <SelectValue placeholder="Select algorithm" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bubble">Bubble Sort</SelectItem>
-                    <SelectItem value="selection">Selection Sort</SelectItem>
-                    <SelectItem value="insertion">Insertion Sort</SelectItem>
-                    <SelectItem value="merge">Merge Sort</SelectItem>
-                    <SelectItem value="quick">Quick Sort</SelectItem>
-                    <SelectItem value="heap">Heap Sort</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Array Size Control */}
-              <div className="flex flex-col gap-2">
-                <label htmlFor="array-size" className="text-sm font-medium text-foreground/80">
-                  Array Size: {arraySize}
-                </label>
-                <Slider
-                  id="array-size"
-                  min={5}
-                  max={100}
-                  step={1}
-                  value={[arraySize]}
-                  onValueChange={handleArraySizeChange}
-                  disabled={isRunning}
-                  className="py-4"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={generateNewArray}
-                  disabled={isRunning && !isPaused}
-                  className="mt-1 rounded-full shadow-sm hover:shadow-md border-primary/20"
-                >
-                  Generate New Array
-                </Button>
-              </div>
-
-              {/* Speed Control */}
-              <div className="flex flex-col gap-2">
-                <label htmlFor="speed" className="text-sm font-medium text-foreground/80">
-                  Speed: {speed}%
-                </label>
-                <Slider
-                  id="speed"
-                  min={1}
-                  max={100}
-                  step={1}
-                  value={[speed]}
-                  onValueChange={handleSpeedChange}
-                  className="py-4"
-                />
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-foreground/80">Controls</span>
-                <div className="grid grid-cols-3 gap-2">
-                  <Button
-                    onClick={startSorting}
-                    variant="default"
-                    className="rounded-full shadow-sm hover:shadow-md transition-all"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Algorithm & Array Size Controls */}
+              <div className="flex flex-col gap-4">
+                {/* Algorithm Selector */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="algorithm" className="text-sm font-medium text-foreground/80">
+                    Algorithm
+                  </label>
+                  <Select
+                    value={algorithm}
+                    onValueChange={handleAlgorithmChange}
                     disabled={isRunning && !isPaused}
                   >
-                    <Play className="h-4 w-4 mr-2" />
-                    {isPaused ? "Resume" : "Start"}
-                  </Button>
+                    <SelectTrigger id="algorithm" className="rounded-full shadow-sm hover:shadow border-primary/20">
+                      <SelectValue placeholder="Select algorithm" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bubble">Bubble Sort</SelectItem>
+                      <SelectItem value="selection">Selection Sort</SelectItem>
+                      <SelectItem value="insertion">Insertion Sort</SelectItem>
+                      <SelectItem value="merge">Merge Sort</SelectItem>
+                      <SelectItem value="quick">Quick Sort</SelectItem>
+                      <SelectItem value="heap">Heap Sort</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Array Size Control */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="array-size" className="text-sm font-medium text-foreground/80">
+                    Array Size: {arraySize}
+                  </label>
+                  <Slider
+                    id="array-size"
+                    min={5}
+                    max={100}
+                    step={1}
+                    value={[arraySize]}
+                    onValueChange={handleArraySizeChange}
+                    disabled={isRunning}
+                    className="py-4"
+                  />
                   <Button
-                    onClick={pauseSorting}
-                    variant="secondary"
-                    className="rounded-full shadow-sm hover:shadow-md transition-all"
-                    disabled={!isRunning || isPaused}
+                    variant="outline"
+                    size="sm"
+                    onClick={generateNewArray}
+                    disabled={isRunning && !isPaused}
+                    className="mt-1 rounded-full shadow-sm hover:shadow-md border-primary/20"
                   >
-                    <Pause className="h-4 w-4 mr-2" />
-                    Pause
-                  </Button>
-                  <Button
-                    onClick={resetSorting}
-                    variant="destructive"
-                    className="rounded-full shadow-sm hover:shadow-md transition-all"
-                  >
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    Reset
+                    Generate New Array
                   </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowInfo(!showInfo)}
-                  disabled={isRunning && !isPaused}
-                  className="mt-1 rounded-full shadow-sm hover:shadow-md border-primary/20"
-                >
-                  <Info className="h-4 w-4 mr-2" />
-                  {showInfo ? "Hide" : "Show"} Info
-                </Button>
+              </div>
+
+              {/* Speed & Action Controls */}
+              <div className="flex flex-col gap-4">
+                {/* Speed Control */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="speed" className="text-sm font-medium text-foreground/80">
+                    Speed: {speed}%
+                  </label>
+                  <Slider
+                    id="speed"
+                    min={1}
+                    max={100}
+                    step={1}
+                    value={[speed]}
+                    onValueChange={handleSpeedChange}
+                    className="py-4"
+                  />
+                </div>
+
+                {/* Control Buttons - Reorganized into a grid */}
+                <div className="flex flex-col gap-2 mt-2">
+                  <span className="text-sm font-medium text-foreground/80">Controls</span>
+                  <div className="grid grid-cols-1 gap-3">
+                    {/* Primary controls row */}
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={startSorting}
+                        variant="default"
+                        className="flex-1 rounded-full shadow-md hover:shadow-lg transition-all bg-gradient-to-r from-purple-600 to-blue-500 text-white"
+                        disabled={isRunning && !isPaused}
+                      >
+                        <Play className="h-5 w-5 mr-2" />
+                        {isPaused ? "Resume" : "Start"}
+                      </Button>
+                      
+                      <Button
+                        onClick={pauseSorting}
+                        variant="secondary"
+                        className="flex-1 rounded-full shadow-md hover:shadow-lg transition-all"
+                        disabled={!isRunning || isPaused}
+                      >
+                        <Pause className="h-5 w-5 mr-2" />
+                        Pause
+                      </Button>
+                    </div>
+                    
+                    {/* Reset button row */}
+                    <Button
+                      onClick={resetSorting}
+                      variant="destructive"
+                      className="rounded-full shadow-md hover:shadow-lg transition-all"
+                    >
+                      <RotateCcw className="h-5 w-5 mr-2" />
+                      Reset
+                    </Button>
+                    
+                    {/* Info button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowInfo(!showInfo)}
+                      className="rounded-full shadow-sm hover:shadow-md border-primary/20"
+                    >
+                      <Info className="h-4 w-4 mr-2" />
+                      {showInfo ? "Hide" : "Show"} Info
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
