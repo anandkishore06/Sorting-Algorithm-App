@@ -25,7 +25,6 @@ import {
   AlgorithmStep,
   generateRandomArray,
   resetVisualStates,
-  createArrayElement
 } from '@/utils/sortingAlgorithms';
 import { getSortingSteps, getAlgorithmInfo } from '@/utils/sortingUtils';
 import ArrayBars from './ArrayBars';
@@ -228,14 +227,6 @@ const SortingVisualizer: React.FC = () => {
                     <SelectItem value="heap">Heap Sort</SelectItem>
                   </SelectContent>
                 </Select>
-                <div className="mt-1 flex items-center gap-1">
-                  <Badge variant="outline" className="text-xs">
-                    Time: {algorithmInfo.timeComplexity}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    Space: {algorithmInfo.spaceComplexity}
-                  </Badge>
-                </div>
               </div>
 
               {/* Array Size Control */}
@@ -278,35 +269,30 @@ const SortingVisualizer: React.FC = () => {
                   onValueChange={handleSpeedChange}
                   className="py-4"
                 />
-                <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Slower</span>
-                  <span>Faster</span>
-                </div>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2">
                 <span className="text-sm font-medium">Controls</span>
-                <div className="grid grid-cols-2 gap-2">
-                  {!isRunning || isPaused ? (
-                    <Button
-                      onClick={startSorting}
-                      variant="default"
-                      className="rounded-full"
-                    >
-                      <Play className="h-4 w-4 mr-2" />
-                      {isPaused ? "Resume" : "Start"}
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={pauseSorting}
-                      variant="secondary"
-                      className="rounded-full"
-                    >
-                      <Pause className="h-4 w-4 mr-2" />
-                      Pause
-                    </Button>
-                  )}
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    onClick={startSorting}
+                    variant="default"
+                    className="rounded-full"
+                    disabled={isRunning && !isPaused}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    {isPaused ? "Resume" : "Start"}
+                  </Button>
+                  <Button
+                    onClick={pauseSorting}
+                    variant="secondary"
+                    className="rounded-full"
+                    disabled={!isRunning || isPaused}
+                  >
+                    <Pause className="h-4 w-4 mr-2" />
+                    Pause
+                  </Button>
                   <Button
                     onClick={resetSorting}
                     variant="destructive"
@@ -320,6 +306,7 @@ const SortingVisualizer: React.FC = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowInfo(!showInfo)}
+                  disabled={isRunning && !isPaused}
                   className="mt-1 rounded-full"
                 >
                   <Info className="h-4 w-4 mr-2" />
@@ -350,15 +337,20 @@ const SortingVisualizer: React.FC = () => {
               <div className="flex-1 relative min-h-[300px]">
                 <ArrayBars array={array} />
               </div>
+              
+              {/* Time and Space Complexity */}
+              <div className="mt-4 flex justify-center gap-4">
+                <Badge variant="outline" className="text-sm">
+                  Time: {algorithmInfo.timeComplexity}
+                </Badge>
+                <Badge variant="outline" className="text-sm">
+                  Space: {algorithmInfo.spaceComplexity}
+                </Badge>
+              </div>
             </div>
           </CardContent>
         </Card>
       </main>
-
-      {/* Footer */}
-      <footer className="mt-6 text-center text-sm text-muted-foreground">
-        <p>Created with React, TypeScript and Tailwind CSS</p>
-      </footer>
     </div>
   );
 };
